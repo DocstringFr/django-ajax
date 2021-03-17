@@ -2,43 +2,44 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Django Ajax</title>
+    <title>Django</title>
 </head>
 <body>
-<h1>Django Ajax Example</h1>
+<h1>Django Example</h1>
 
 
-<!-- Le formulaire -->
 <form method="POST">
     {% csrf_token %}
-    <label for="operation">Opération</label>
-    <input type="text" id="a"> + <input type="text" id="b">
-    <input id="ajax-call" type="submit" value="Calculer">
+    <input type="text" name="a" id="a"> + <input type="text" name="b" id="b">
+    <input id="fetch-call" type="submit" value="Calculer">
 </form>
 
-<!-- Nous afficherons le résultat de l'opération ici -->
-<p id="ajax"></p>
+<p id="operation">
 
+</p>
 
 <script>
-document.querySelector("#ajax-call").addEventListener("click", event => {
+
+document.querySelector("#fetch-call").addEventListener("click", event => {
     event.preventDefault();
-    let formData = new FormData();
-    formData.append('a', document.querySelector("#a").value);
-    formData.append('b', document.querySelector("#b").value);
+
+    let form = new FormData();
+
+    form.append("a", document.querySelector("#a").value);
+    form.append("b", document.querySelector("#b").value);
+
     let csrfTokenValue = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const request = new Request('{% url "compute" %}', {
-        method: 'POST',
-        body: formData,
-        headers: {'X-CSRFToken': csrfTokenValue}
-    });
+    let request = new Request("{% url 'compute' %}", {method: 'POST',
+                                                      body: form,
+                                                      headers: {"X-CSRFToken": csrfTokenValue}})
     fetch(request)
         .then(response => response.json())
         .then(result => {
-            const resultElement = document.querySelector("#ajax");
-            resultElement.innerHTML = result["operation_result"];
+            let resultParagraph = document.querySelector("#operation");
+            resultParagraph.innerHTML = result["operation_result"];
         })
 })
+
 </script>
 
 </body>

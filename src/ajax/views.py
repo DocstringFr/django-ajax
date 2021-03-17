@@ -7,5 +7,7 @@ def home(request):
 
 
 def compute(request):
-    a, b = request.POST.get("a"), request.POST.get("b")
+    a = request.POST.get("a")
+    b = request.POST.get("b")
+
     return JsonResponse({"operation_result": int(a) + int(b)})
